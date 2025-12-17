@@ -228,7 +228,7 @@ We trained and evaluated **10 different machine learning models**:
 
 ### Feature Importance
 
-![Feature Importance](charts/17_feature_importance.png)
+![Feature Importance](charts/17_feature_coefficients.png)
 
 **Most Important Features**:
 1. **Sex** (Gender) - Dominant predictor
