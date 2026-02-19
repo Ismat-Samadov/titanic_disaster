@@ -9,20 +9,11 @@ os.chdir(BASE_DIR)
 
 
 # --- cell 1 ---
-try:
-    import kagglehub
-
-    # Download latest version
-    path = kagglehub.dataset_download("yasserh/titanic-dataset")
-    dataset_csv = Path(path) / "Titanic-Dataset.csv"
-    print("Path to dataset files:", path)
-except ModuleNotFoundError:
-    dataset_csv = BASE_DIR / "data" / "Titanic-Dataset.csv"
-    if not dataset_csv.exists():
-        raise RuntimeError(
-            "kagglehub is not installed and no local dataset found at "
-            f"{dataset_csv}. Install kagglehub or place Titanic-Dataset.csv in data/."
-        )
+dataset_csv = BASE_DIR / "data" / "Titanic-Dataset.csv"
+if not dataset_csv.exists():
+    raise RuntimeError(
+        "Dataset not found. Place Titanic-Dataset.csv in data/ before running."
+    )
 
 # --- cell 2 ---
 # Data manipulation
@@ -31,6 +22,8 @@ import numpy as np
 import os
 
 # Visualization
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -120,7 +113,7 @@ if len(missing_data) > 0:
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.savefig('charts/01_missing_values.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 else:
     print("No missing values found!")
 
@@ -230,7 +223,7 @@ if 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/02_overall_survival.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print(f"\nSurvival Rate: {survival_rate[1]:.2f}%")
     print(f"Death Rate: {survival_rate[0]:.2f}%")
@@ -260,7 +253,7 @@ if 'Sex' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/03_survival_by_gender.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print("\nSurvival rate by gender:")
     print(survival_by_sex)
@@ -290,7 +283,7 @@ if 'Pclass' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/04_survival_by_pclass.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print("\nSurvival rate by passenger class:")
     print(survival_by_pclass)
@@ -318,7 +311,7 @@ if 'Age' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/05_survival_by_age.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print("\nAge statistics by survival:")
     print(df_clean.groupby('Survived')['Age'].describe())
@@ -349,7 +342,7 @@ if 'AgeGroup' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/06_survival_by_age_group.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 16 ---
 # Survival by Family Size
@@ -376,7 +369,7 @@ if 'FamilySize' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/07_survival_by_family_size.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 17 ---
 # Survival by Embarked
@@ -403,7 +396,7 @@ if 'Embarked' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/08_survival_by_embarked.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 18 ---
 # Survival by Pclass and Sex
@@ -425,7 +418,7 @@ if 'Pclass' in df_clean.columns and 'Sex' in df_clean.columns and 'Survived' in 
     
     plt.tight_layout()
     plt.savefig('charts/09_survival_by_class_gender.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 19 ---
 # Heatmap: Survival by Age and Class
@@ -447,7 +440,7 @@ if 'Age' in df_clean.columns and 'Pclass' in df_clean.columns and 'Survived' in 
     plt.ylabel('Passenger Class')
     plt.tight_layout()
     plt.savefig('charts/10_heatmap_age_class.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 20 ---
 # Select numeric columns for correlation
@@ -463,7 +456,7 @@ sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm', center=0
 plt.title('Correlation Matrix of Numeric Features', fontsize=16, fontweight='bold', pad=20)
 plt.tight_layout()
 plt.savefig('charts/11_correlation_matrix.png', dpi=300, bbox_inches='tight')
-plt.show()
+plt.close()
 
 # Feature correlation with Survival
 if 'Survived' in correlation_matrix.columns:
@@ -480,7 +473,7 @@ if 'Survived' in correlation_matrix.columns:
     plt.axvline(x=0, color='black', linestyle='--', linewidth=0.8)
     plt.tight_layout()
     plt.savefig('charts/12_survival_correlation.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 21 ---
 # Fare distribution
@@ -507,7 +500,7 @@ if 'Fare' in df_clean.columns and 'Survived' in df_clean.columns:
     
     plt.tight_layout()
     plt.savefig('charts/13_survival_by_fare.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 22 ---
 # Create a copy for modeling
@@ -704,7 +697,7 @@ axes[1, 1].set_ylabel('')
 
 plt.tight_layout()
 plt.savefig('charts/14_model_comparison.png', dpi=300, bbox_inches='tight')
-plt.show()
+plt.close()
 
 # --- cell 30 ---
 # Select best model based on accuracy
@@ -729,7 +722,7 @@ plt.ylabel('Actual')
 plt.xlabel('Predicted')
 plt.tight_layout()
 plt.savefig('charts/15_confusion_matrix_best.png', dpi=300, bbox_inches='tight')
-plt.show()
+plt.close()
 
 # Classification Report
 print("\nClassification Report:")
@@ -754,7 +747,7 @@ if hasattr(best_model, 'predict_proba'):
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig('charts/16_roc_curve_best.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 33 ---
 # Feature importance (if available)
@@ -773,7 +766,7 @@ if hasattr(best_model, 'feature_importances_'):
     plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.savefig('charts/17_feature_importance.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print("\nTop 10 Important Features:")
     print(feature_importance.head(10).to_string(index=False))
@@ -793,7 +786,7 @@ elif hasattr(best_model, 'coef_'):
     plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.savefig('charts/17_feature_coefficients.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     print("\nTop 10 Important Features:")
     print(feature_importance.head(10).to_string(index=False))
@@ -887,7 +880,7 @@ for model_name in top_3_models:
             n_iter=20,  # Number of parameter settings sampled
             cv=5,
             scoring='accuracy',
-            n_jobs=-1,
+            n_jobs=1,
             random_state=42,
             verbose=1
         )
@@ -974,7 +967,7 @@ for bars in [bars1, bars2]:
 
 plt.tight_layout()
 plt.savefig('charts/18_baseline_vs_optimized.png', dpi=300, bbox_inches='tight')
-plt.show()
+plt.close()
 
 # --- cell 39 ---
 # Select the best optimized model
@@ -1009,7 +1002,7 @@ plt.ylabel('Actual')
 plt.xlabel('Predicted')
 plt.tight_layout()
 plt.savefig('charts/19_final_confusion_matrix.png', dpi=300, bbox_inches='tight')
-plt.show()
+plt.close()
 
 print("\nFinal Classification Report:")
 print(classification_report(y_test, y_pred_final, target_names=['Died', 'Survived']))
@@ -1033,7 +1026,7 @@ if hasattr(final_model, 'predict_proba'):
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig('charts/20_final_roc_curve.png', dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 # --- cell 42 ---
 print("\n" + "="*80)
